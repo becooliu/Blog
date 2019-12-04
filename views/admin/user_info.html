@@ -29,6 +29,7 @@
     {% endfor %}
 </table>
 
-{% include 'pagination.html' %}
+{% set type={name: "user_info"} %}
+{% include 'pagination.html' with type %}
 
 {% endblock %}

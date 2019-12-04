@@ -25,5 +25,6 @@
     {% endfor %}
 </table>
 
-{% include 'pagination.html' %}
+{% set type = {name: 'category'} %}
+{% include 'pagination.html' with type %}
 {% endblock %}
