@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/public/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main clearfix">
+            <div class="main-left">
+                this is content area.
+            </div>
+            <div class="main-user">
+                {% if userInfo._id %}
+                <div class="user-info-box">
+                    <p>用户信息:<span class="username">{{ userInfo.username }}</span></p>
+                    
+                    {% if userInfo.isAdmin %}
+                    <div class="admin-info">您好,您是管理员,<a href="/admin">您可以点击这里进入管理</a></div>
+                    {% else %}
+                    <p>欢迎来到我的博客。</p>
+                    {%endif%}
+                    
+                    <a class="logout" id="logout" href="javascript:void(0);">退出</a>
+                </div>
+                {% else %}
+                <div class="userbox" id="loginBox">
+                    <label for="#username">用户名：</label><input type="text" name="username"><br>
+                    <label for="#password">密码</label><input type="password" name="password"><br>
+                    <span>没有帐号？</span><a href="javascript:void(0);" class="colMint">立即注册</a><br>
+                    <button>登录</button>
+                    <p class="warning-info"></p>
+                </div>
+                <div class="userbox" id="registerBox" style="display: none;">
+                    <label for="#username">用户名：</label><input type="text" name="username"><br>
+                    <label for="#password">密码</label><input type="password" name="password"><br>
+                    <label for="#repassword">确认密码</label><input type="password" name="repassword"><br>
+                    <span>已有帐号</span><a href="javascript:void(0);">立即登录</a><br>
+                    <button>注册</button>
+                    <p class="warning-info"></p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script src="/public/js/jquery-1.11.3.min.js"></script>
+    <script src="/public/js/index.js"></script>
+</body>
+</html>
