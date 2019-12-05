@@ -45,6 +45,7 @@ router.get('/user_info', function(req, res, next) {
                 pages: pages, //总共多少页
                 limit: limit, //每页显示几条
                 page: page, //当前是第几页
+                pagetype: "user_info"
             })
         })
         
@@ -69,6 +70,7 @@ router.get('/category', function(req, res, next) { // 分类首页
                 pages: pages, //总共多少页
                 limit: limit, //每页显示几条
                 page: page, //当前是第几页
+                pagetype: "category"
             })
         })
     })
