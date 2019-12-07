@@ -70,7 +70,7 @@ router.get('/category', function(req, res, next) { // 分类首页
                 pages: pages, //总共多少页
                 limit: limit, //每页显示几条
                 page: page, //当前是第几页
-                pagetype: "category"
+                pagetype: "category" //传递给分页使用
             })
         })
     })
@@ -177,5 +177,62 @@ router.post('/category/edit' , (req, res) => {
         })
     })
 })
+
+//分类删除
+router.get('/category/delete' , (req, res) => {
+    let condition = {_id: req.query.id};
+
+    Category.findOne(condition).then(category => {
+        if(!category) {
+            res.render('admin/error' , {
+                userInfo: req.userInfo,
+                message: '分类不存在',
+                url: '/admin/category'
+            })
+        }else {
+            let name = category.name;
+            Category.deleteOne(condition, err => {
+                if(err) {
+                    res.render('admin/error', {
+                        userInfo: req.userInfo,
+                        message: "分类删除失败"+err,
+                        url: '/admin/category'
+                    })
+                }else {
+                    res.render('admin/success' , {
+                        userInfo: req.userInfo,
+                        message: '分类'+name+'删除成功',
+                        url: '/admin/category'
+                    })
+                }
+            })
+        }
+    })
+})
+/* router.post('/category/delete', (req, res) => {
+    let id = req.query.id;
+    Category.findOne({_id: id}).then(cty => {
+        if(cty) {
+            let name = cty.name;
+            let condition = {_id: id};
+            Category.deleteOne(condition, err => {
+                if(err) {
+                    res.render('admin/error', {
+                        userInfo: req.userInfo,
+                        message: "分类删除失败",
+                        url: '/admin/category'
+                    })
+                }else {
+                    res.render('admin/success' , {
+                        userInfo: req.userInfo,
+                        message: '分类'+name+'删除成功',
+                        url: '/admin/category'
+                    })
+                }
+
+            })
+        }
+    })
+}) */
 
 module.exports = router;
