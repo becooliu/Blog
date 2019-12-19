@@ -5,6 +5,7 @@ const router = express.Router();
 
 const User = require('../models/User');
 const Category = require('../models/Category')
+const Content = require('../models/Content')
 
 /* router.get('/user', (req, res , next) => {
     res.send('user');
@@ -53,7 +54,7 @@ router.get('/user_info', function(req, res, next) {
 })
 
 //分类管理
-router.get('/category', function(req, res, next) { // 分类首页
+router.get('/category', function(req, res) { // 分类首页
     var limit = 2; //每页显示的条数
     var page = Number(req.query.page || 1); //显示第几页
     var pages = 0; //总页数
@@ -209,30 +210,133 @@ router.get('/category/delete' , (req, res) => {
         }
     })
 })
-/* router.post('/category/delete', (req, res) => {
-    let id = req.query.id;
-    Category.findOne({_id: id}).then(cty => {
-        if(cty) {
-            let name = cty.name;
-            let condition = {_id: id};
-            Category.deleteOne(condition, err => {
-                if(err) {
-                    res.render('admin/error', {
-                        userInfo: req.userInfo,
-                        message: "分类删除失败",
-                        url: '/admin/category'
-                    })
-                }else {
-                    res.render('admin/success' , {
-                        userInfo: req.userInfo,
-                        message: '分类'+name+'删除成功',
-                        url: '/admin/category'
-                    })
-                }
 
+/* 内容首页 */
+router.get('/content', (req, res) => {
+    var limit = 2; //每页显示的条数
+    var page = Number(req.query.page || 1); //显示第几页
+    var pages = 0; //总页数
+
+    Content.countDocuments().then(function(count) {
+        console.log(count)
+        pages = Math.ceil(count / limit);
+        page = Math.max(1,page);
+        page = Math.min(pages,page);
+        const skip = (page - 1) * limit;
+        /***此处重点：通过schema 中的关联字段 category_id 在查询时，同时查询Category 表中的分类信息，使用populate("关联字段")方法***/
+        Content.find().limit(limit).skip(skip).populate('category_id').then(cts => {
+            console.log(cts);
+            res.render('admin/content_index' , {
+                userInfo: req.userInfo,
+                contents: cts,
+                count: count, //数据总条数
+                pages: pages, //总共多少页
+                limit: limit, //每页显示几条
+                page: page, //当前是第几页
+                pagetype: "content" //传递给分页使用
+            })
+        })
+    })
+})
+
+/* 内容添加 */
+router.get('/content/add' , (req, res) => {
+    Category.find().then(category => {
+        if (category) {
+            res.render('admin/content_add' , {
+                userInfo: req.userInfo,
+                categories: category
+            })
+
+        }else {
+            res.render('admin/error', {
+                userInfo: req.userInfo,
+                message: '未添加分类，请先去添加',
+                url: '/admin/category/add'
             })
         }
     })
-}) */
+})
+
+/*** 添加内容 ***/
+router.post('/content/add' , (req, res) => {
+    console.log(req.body);
+    let data = req.body;
+    let category_id = data.category;
+    let author = req.userInfo.username;
+    let create_time = Date.now();
+    let last_modify = Date.now();
+    let title = data.title;
+    let desc = data.description;
+    let content = data.content;
+
+    let save_data = {
+        category_id,
+        author,
+        create_time,
+        last_modify,
+        title,
+        desc,
+        content
+    }
+    
+    return new Promise((resolve , reject) => {
+        if (new Content(save_data).save()) {
+            resolve(
+                res.render('admin/success' , {
+                    userInfo: req.userInfo,
+                    message: '博客内容添加成功',
+                    url: '/admin/content'
+                })
+            )
+        }else {
+            reject(
+                res.render('admin/error' , {
+                    userInfo: req.userInfo,
+                    message: "内容添加失败",
+                    url: "/admin/content"
+                })
+            )
+        }
+    })
+})
+
+// 修改内容
+router.get('/content/edit', (req, res) => {
+    let id = req.query.id || "";
+    let categories = [];
+    Category.find().sort({_id: -1}).then(rs => {
+        if (rs) {
+            categories = rs;
+        }else {
+            res.render('/admin/error', {
+                userInfo: req.userInfo,
+                message: "此文章不属于任何分类，无法修改",
+                url: '/admin/content'
+            })
+            return new Promise.reject();
+        }
+        
+        return Content.findOne({_id: id}).populate('category_id').then(content => {
+            if(!content) {
+                res.render('/admin/error' , {
+                    userInfo: req.userInfo,
+                    message: "未找到相关内容",
+                    url: "/admin/content"
+                })
+                return;
+            }
+            /* for let (i in content) {
+                console.log(i, content[i])
+            } */
+            console.log(content);
+            res.render('admin/content_edit' , {
+                userInfo: req.userInfo,
+                contents: content,
+                categories: categories
+            })
+        })
+    })
+})
 
 module.exports = router;
