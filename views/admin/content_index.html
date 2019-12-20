@@ -32,27 +32,31 @@
         <th>作者</th>
         <th>简介</th>
         <th>内容</th>
-        <th>发布时间</th>
-        <th>修改时间</th>
+        <!--<th>发布时间</th>
+        <th>修改时间</th>-->
         <th>操作</th>
     </tr>
     {% for content in contents %}
     <tr>
         <td><span class="inline-span">{{ content.category_id.name.toString() }}</span></td>
-        <td><span class="inline-span" title="{{content._it.toString()}}">{{ content._id.toString() }}</span></td>
+        <td><span class="inline-span" title="{{content._id.toString()}}">{{ content._id.toString() }}</span></td>
         <td><span class="inline-span" title="{{ content.title }}">{{ content.title }}</span></td>
         <td><span class="inline-span" title="{{ content.author }}">{{ content.author }}</span></td>
         <td><span class="inline-span" title="{{ content.desc }}">{{ content.desc }}</span></td>
         <td><span class="inline-span" title="{{ content.content }}">{{ content.content }}</span></td>
-        <td><span class="inline-span" title="{{ content.create_time|date('Y-m-d H:i:s') }}">{{ content.create_time|date('Y-m-d H:i:s') }}</span></td>
-        <td><span class="inline-span" title="{{ content.last_modify|date('Y-m-d H:i:s') }}">{{ content.last_modify|date('Y-m-d H:i:s') }}</span></td>
+        <!-- <td><span class="inline-span" title="{{ content.create_time|date('Y-m-d H:i:s') }}">{{ content.create_time|date('Y-m-d H:i:s') }}</span></td>
+        <td><span class="inline-span" title="{{ content.last_modify|date('Y-m-d H:i:s') }}">{{ content.last_modify|date('Y-m-d H:i:s') }}</span></td> -->
         <td>
             <a href="/admin/content/edit?id={{content._id.toString()}}">修改</a> |
             <a href="/admin/content/delete?id={{content._id.toString()}}">删除</a>
+            <!-- <a href="javascript:;" onclick="deleteContent('{{ content._id.toString() }}')">删除</a> -->
+            
         </td>
     </tr>
     {% endfor %}
 </table>
-
+{% block content-js %}
+<script src="../../public/js/content/content_add.js"></script>
+{% endblock %}
 {% include 'pagination.html' %}
 {% endblock %}

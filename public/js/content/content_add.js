@@ -1,4 +1,7 @@
-$(function(){ //添加内容
+//import { json } from "body-parser";
+
+$(function(){ 
+    //添加内容
     var add_content = $('#add_content, #edit_content');
     add_content.on('click', function(e){
         let category = $('#category');

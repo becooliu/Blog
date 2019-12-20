@@ -213,18 +213,17 @@ router.get('/category/delete' , (req, res) => {
 
 /* 内容首页 */
 router.get('/content', (req, res) => {
-    var limit = 2; //每页显示的条数
+    var limit = 5; //每页显示的条数
     var page = Number(req.query.page || 1); //显示第几页
     var pages = 0; //总页数
 
     Content.countDocuments().then(function(count) {
-        console.log(count)
         pages = Math.ceil(count / limit);
         page = Math.max(1,page);
         page = Math.min(pages,page);
         const skip = (page - 1) * limit;
         /***此处重点：通过schema 中的关联字段 category_id 在查询时，同时查询Category 表中的分类信息，使用populate("关联字段")方法***/
-        Content.find().limit(limit).skip(skip).populate('category_id').then(cts => {
+        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category_id').then(cts => {
             console.log(cts);
             res.render('admin/content_index' , {
                 userInfo: req.userInfo,
@@ -260,12 +259,10 @@ router.get('/content/add' , (req, res) => {
 
 /*** 添加内容 ***/
 router.post('/content/add' , (req, res) => {
-    console.log(req.body);
+    //console.log(req.body);
     let data = req.body;
     let category_id = data.category;
     let author = req.userInfo.username;
-    let create_time = Date.now();
-    let last_modify = Date.now();
     let title = data.title;
     let desc = data.description;
     let content = data.content;
@@ -273,8 +270,6 @@ router.post('/content/add' , (req, res) => {
     let save_data = {
         category_id,
         author,
-        create_time,
-        last_modify,
         title,
         desc,
         content
@@ -302,10 +297,12 @@ router.post('/content/add' , (req, res) => {
 })
 
 // 修改内容
+    //获取要修改的数据并展示
 router.get('/content/edit', (req, res) => {
     let id = req.query.id || "";
     let categories = [];
-    Category.find().sort({_id: -1}).then(rs => {
+    //console.log(id);
+    Category.find().then(rs => {
         if (rs) {
             categories = rs;
         }else {
@@ -317,7 +314,7 @@ router.get('/content/edit', (req, res) => {
             return new Promise.reject();
         }
         
-        return Content.findOne({_id: id}).populate('category_id').then(content => {
+        return Content.findOne({_id: id}).sort({_id: -1}).populate('category_id').then(content => {
             if(!content) {
                 res.render('/admin/error' , {
                     userInfo: req.userInfo,
@@ -326,16 +323,88 @@ router.get('/content/edit', (req, res) => {
                 })
                 return;
             }
-            /* for let (i in content) {
-                console.log(i, content[i])
-            } */
-            console.log(content);
+            
             res.render('admin/content_edit' , {
                 userInfo: req.userInfo,
                 contents: content,
                 categories: categories
             })
         })
+    })
+})
+
+    //点击修改后对数据校验后进行保存
+router.post('/content/edit' , (req, res) => {
+    let id = req.query.id;
+    let resData = req.body;
+    Content.findOne({_id: id}).then(rs => {
+        if (!rs) {
+            res.render('/admin/error', {
+                userInfo: req.userInfo,
+                message: "未找到相关的内容",
+                url: '/admin/content'
+            })
+            return new Promise.reject();
+        }
+        let updateCondition = {_id: id};
+        let category_id = resData.category;
+        let title = resData.title;
+        let desc = resData.desc;
+        let content = resData.content;
+
+        let save_data = {
+            category_id,
+            title,
+            desc,
+            content
+        };
+
+        Content.updateOne(updateCondition, {$set: save_data}, (err, rep) => {
+            if (err) {
+                res.render('admin/error' , {
+                    userInfo: req.userInfo,
+                    message: '内容修改失败，请联系管理员',
+                    url: '/admin/content'
+                })
+            }else {
+                res.render('admin/success' , {
+                    userInfo: req.userInfo,
+                    message: '恭喜，内容修改成功',
+                    url: '/admin/content'
+                })
+            }
+
+        })
+    })
+})
+
+//内容删除
+router.get('/content/delete' , (req, res) => {
+    let id = req.query.id;
+    Content.findByIdAndDelete(id, (err , rs) => {
+        if (err) {
+            res.render('admin/error' , {
+                userInfo: req.userInfo,
+                message: '无此内容，删除失败',
+                url: '/admin/error'
+            })
+        }else {
+            if (rs == 'null') {
+                res.render('admin/error' , {
+                    userInfo: req.userInfo,
+                    message: "没有此内容相关的数据或此内容id为空",
+                    url: "/admin/content"
+                })
+                return new Promise().reject();
+            } else {
+                console.log(rs);
+                res.render('admin/success' , {
+                    userInfo: req.userInfo,
+                    message: '内容<<'+ rs.title +'>>删除成功',
+                    url: '/admin/content'
+                })
+            }
+        }
     })
 })
 
