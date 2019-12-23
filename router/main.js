@@ -5,7 +5,10 @@ const router = express.Router();
 const Category = require('../models/Category');
 const Content = require('../models/Content');
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
+    let c_id = req.query.category_id;
+    //根据首页请求是否携带分类id 参数
+    
     let categories = [];
     //console.log(id);
     Category.find().then(rs => {
@@ -27,6 +30,7 @@ router.get('/', (req, res, next) => {
                 })
                 return;
             }
+            console.log('content='+content)
             
             res.render('main/index' , {
                 userInfo: req.userInfo,
@@ -34,11 +38,8 @@ router.get('/', (req, res, next) => {
                 categories: categories
             })
         })
-    })
-    /* res.render('main/index.html', {
-        //此处为模板的第二个参数，将userInfo 传递给模板以在页面中直接调用
-        userInfo: req.userInfo
-    }) */
-})
+    });
+    
+});
 
 module.exports = router;

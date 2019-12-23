@@ -8,18 +8,7 @@
     content: '';
     clear: both;
 }
-.userbox {
-    line-height: 30px;
-}
-.userbox label{
-    width: 70px;
-    display: inline-block;
-    font-size: 16px;
-}
-.userbox input[type="text"] ,
-.userbox input[type="password"] {
-    width: calc(100% - 75px);
-}
+
 .hide {
     display: none;
 }
@@ -45,6 +34,26 @@
 }
 
 .main-user {
-    padding: 20px 10px;
+    padding: 10px;
     background-color: #f6f6f6;
+}
+
+.logout {
+    float: right;
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.category-list {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #999;
+}
+.category-list-group {
+    list-style: none;
+    padding: 0
+}
+.category-list-group .category-item {
+    line-height: 30px;
+    cursor: pointer;
 }

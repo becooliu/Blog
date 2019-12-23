@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="blog-header">
-                    <h1 class="blog-title">Welcome to my blog .</h1>
+                    <h3 class="blog-title">某人的博客</h3>
                     <p class="lead blog-description">博文列表</p>
                 </div>
             </div>
@@ -36,42 +36,78 @@
                 {% endfor %}
                 </div>
             </div>
-            <div class="col-sm-3 col-sm-offset-1">
+            <div class="col-sm-4">
                 <div class="main-user">
                     {% if userInfo._id %}
-                    <div class="user-info-box">
-                        <p>用户信息:<span class="username">{{ userInfo.username }}</span></p>
-                        
+                    <div class="clearfix user-info-box">
+                        <p cladd="lead">用户信息：<span class="username">{{ userInfo.username }}</span></p>
                         {% if userInfo.isAdmin %}
                         <div class="admin-info">您好,您是<strong>管理员</strong>,<a href="/admin">进入管理</a></div>
                         {% else %}
-                        <p>欢迎来到我的博客。</p>
+                        <p class="lead">欢迎来到我的博客。</p>
                         {%endif%}
                         
-                        <a class="logout" id="logout" href="javascript:void(0);">退出</a>
+                        <a class="logout btn-link" id="logout" href="javascript:void(0);">退出</a>
                     </div>
                     {% else %}
                     <div class="userbox" id="loginBox">
-                        <label for="#username">用户名：</label><input type="text" name="username"><br>
+                        <!-- <label for="#username">用户名：</label><input type="text" name="username"><br>
                         <label for="#password">密码</label><input type="password" name="password"><br>
                         <span>没有帐号？</span><a href="javascript:void(0);" class="colMint">立即注册</a><br>
-                        <button>登录</button>
+                        <button>登录</button> -->
+                        <div class="form-group">
+                          <label for="username">用户名：</label>
+                          <input type="text" name="username" class="form-control" id="username" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                          <label for="password">密码：</label>
+                          <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <span>没有帐号？</span><a href="javascript:void(0);" class="colMint">立即注册</a>
+                          <label>
+                          </label>
+                        </div>
+                        <button class="btn btn-default">登录</button>
                         <p class="warning-info"></p>
+                        
                     </div>
                     <div class="userbox" id="registerBox" style="display: none;">
-                        <label for="#username">用户名：</label><input type="text" name="username"><br>
-                        <label for="#password">密码</label><input type="password" name="password"><br>
-                        <label for="#repassword">确认密码</label><input type="password" name="repassword"><br>
-                        <span>已有帐号</span><a href="javascript:void(0);">立即登录</a><br>
-                        <button>注册</button>
+                        <div class="form-group">
+                          <label for="username">用户名：</label>
+                          <input type="text" name="username" class="form-control" id="username" placeholder="请输入用户名">
+                        </div>
+                        <div class="form-group">
+                          <label for="password">密码：</label>
+                          <input type="text" name="password" class="form-control" id="password" placeholder="请输入密码">
+                        </div>
+                        <div class="form-group">
+                          <label for="repassword">确认密码：</label>
+                          <input type="text" name="repassword" class="form-control" id="repassword" placeholder="确认密码">
+                        </div>
+                        <div class="form-group">
+                            <span>已有帐号</span><a href="javascript:void(0);">立即登录</a>
+                        </div>
+                        
+                        <button class="btn btn-default">注册</button>
                         <p class="warning-info"></p>
                     </div>
                     {% endif %}
+
+                    <div class="category-list">
+                        <h4>博客分类</h4>
+                        <ul class="category-list-group">
+                            {% for category in categories|uniq %}
+                            <li class="category-item"><a href="/?category_id={{ category._id.toString() }}">{{ category.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-    <script src="/public/js/jquery-1.11.3.min.js"></script>
-    <script src="/public/js/index.js"></script>
+    <script src="../../public/js/jquery-1.11.3.min.js"></script>
+    <script src="../../public/js/index.js"></script>
 </body>
 </html>

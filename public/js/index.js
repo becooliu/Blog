@@ -3,17 +3,18 @@ $(function(){
     var $loginBox = $('#loginBox');
     var $registerBox = $('#registerBox');
     let userInfo = {};
-
-    $loginBox.children('a').on('click', function(){
+    
+    console.log($loginBox.length);
+    $loginBox.find('a').on('click', function(){
         $registerBox.show();
         $loginBox.hide();
     })
-    $registerBox.children('a').on('click', function(){
+    $registerBox.find('a').on('click', function(){
         $loginBox.show();
         $registerBox.hide();
     })
 
-    $registerBox.children('button').on('click', function(){
+    $registerBox.find('button').on('click', function(){
         $.ajax({
             type: 'post',
             url: '/api/user/register',
@@ -25,7 +26,7 @@ $(function(){
             dataType: 'json',
             success: function(result){
                 //显示注册提示信息
-                $registerBox.children('p.warning-info').text(result.message);
+                $registerBox.find('p.warning-info').text(result.message);
                 //注册成功跳转到登录页
                 console.log('result.code='+result.code);
                 if(result.code === '3') {
@@ -39,10 +40,10 @@ $(function(){
     })
 
     //登录
-    $loginBox.children('button').on('click', function(){
-        let $username = $loginBox.children('[name="username"]').val();
-        let $password = $loginBox.children('[name="password"]').val();
-        let $warningBox = $loginBox.children('.warning-info');
+    $loginBox.find('button').on('click', function(){
+        let $username = $loginBox.find('[name="username"]').val();
+        let $password = $loginBox.find('[name="password"]').val();
+        let $warningBox = $loginBox.find('.warning-info');
         
         $.ajax({
             type: 'post',
