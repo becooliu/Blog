@@ -6,8 +6,8 @@ const Category = require('../models/Category');
 const Content = require('../models/Content');
 
 router.get('/', (req, res) => {
-    let c_id = req.query.category_id;
     //根据首页请求是否携带分类id 参数
+    let c_id = req.query.category_id;
     
     let categories = [];
     //console.log(id);
@@ -21,7 +21,6 @@ router.get('/', (req, res) => {
             })
             return new Promise.reject();
         }
-        
         return Content.find().sort({_id: -1}).populate('category_id').then(content => {
             if(!content) {
                 res.render('main/error' , {
@@ -30,13 +29,27 @@ router.get('/', (req, res) => {
                 })
                 return;
             }
-            console.log('content='+content)
+            if(c_id) {
+                let ct = [];
+                for(let i = 0,length = content.length; i< length; i++) {
+                    if(content[i].category_id._id == c_id) {
+                        ct.push(content[i]);
+                    }
+                }
+                res.render('main/index' , {
+                    userInfo: req.userInfo,
+                    contents: ct,
+                    categories: categories
+                })
+            }else {
+                res.render('main/index' , {
+                    userInfo: req.userInfo,
+                    contents: content,
+                    categories: categories
+                })
+
+            }
             
-            res.render('main/index' , {
-                userInfo: req.userInfo,
-                contents: content,
-                categories: categories
-            })
         })
     });
     
