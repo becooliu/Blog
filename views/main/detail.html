@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+
+{% block content %}
+{% block detail %}
+<div class="page-header">
+    <h1>{{ contents.title }} </h1>
+    <p>{{ contents.desc }}</p>
+    <small>{{ contents.author }}</small><span>{{ contents.createAt|safe }}</span>
+  </div>
+<article>
+    <p>{{ contents.content }}</p>
+</article>
+
+{% endblock %}
+{% endblock %}

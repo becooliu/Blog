@@ -36,13 +36,13 @@ router.get('/', (req, res) => {
                         ct.push(content[i]);
                     }
                 }
-                res.render('main/index' , {
+                res.render('main/content_list' , {
                     userInfo: req.userInfo,
                     contents: ct,
                     categories: categories
                 })
             }else {
-                res.render('main/index' , {
+                res.render('main/content_list' , {
                     userInfo: req.userInfo,
                     contents: content,
                     categories: categories
@@ -54,5 +54,26 @@ router.get('/', (req, res) => {
     });
     
 });
+
+router.get('/main/detail', (req, res) => {
+    let blog_id = req.query.id || "";
+    if (blog_id != "" || blog_id != "null") {
+        Content.findById(blog_id).then(content => {
+            console.log(content);
+            if (!content) {
+                res.render('main/error' , {
+                    userInfo: req.userInfo,
+                    message: '未找到此博客内容',
+                    url: '/main/index'
+                })
+            }else {
+                res.render('main/detail' , {
+                    userInfo: req.userInfo,
+                    contents: content
+                })
+            }
+        })
+    }
+})
 
 module.exports = router;
