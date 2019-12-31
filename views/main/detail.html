@@ -1,15 +1,18 @@
 {% extends "index.html" %}
 
 {% block content %}
-{% block detail %}
 <div class="page-header">
     <h1>{{ contents.title }} </h1>
     <p>{{ contents.desc }}</p>
-    <small>{{ contents.author }}</small><span>{{ contents.createAt|safe }}</span>
+    <div class="content-tag">
+      <span>作者：{{ contents.author }}</span>
+      <span>发布时间：{{ contents.createdAt|date('Y-m-d H:i:s','8')|safe }}</span>
+      <span>修改时间：{{ contents.updatedAt|date('Y-m-d H:i:s',8)|safe }}</span>
+      <span>阅读量：{{ contents.views }}</span>
+    </div>
   </div>
 <article>
     <p>{{ contents.content }}</p>
 </article>
 
-{% endblock %}
 {% endblock %}

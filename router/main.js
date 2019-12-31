@@ -56,10 +56,21 @@ router.get('/', (req, res) => {
 });
 
 router.get('/main/detail', (req, res) => {
+    let categories = [];
     let blog_id = req.query.id || "";
+    Category.find().then(ct => {
+        if (!ct) {
+            res.render('main/error' , {
+                userInfo: req.userInfo,
+                message: '无任何分类'
+            })
+        }else {
+            categories = ct;
+        }
+    })
     if (blog_id != "" || blog_id != "null") {
+        
         Content.findById(blog_id).then(content => {
-            console.log(content);
             if (!content) {
                 res.render('main/error' , {
                     userInfo: req.userInfo,
@@ -67,9 +78,23 @@ router.get('/main/detail', (req, res) => {
                     url: '/main/index'
                 })
             }else {
-                res.render('main/detail' , {
-                    userInfo: req.userInfo,
-                    contents: content
+                let view_counts = content.views+1;
+                let update_condition = {
+                    _id: blog_id
+                };
+                let toSave_data = {views: view_counts};
+                Content.updateOne(update_condition , {$set: toSave_data}, (err, save_res) => {
+                    console.log(save_res);
+                    if(err) {
+                        return new Promise.reject(err);
+                    }
+                    Content.findById(blog_id).then(conts => {
+                        res.render('main/detail' , {
+                            userInfo: req.userInfo,
+                            contents: conts,
+                            categories: categories
+                        })
+                    })
                 })
             }
         })

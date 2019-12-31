@@ -12,7 +12,10 @@
                 <div class="content-box">{{ content.desc }}</div><br/>
                 <a class="btn-link" href="/main/detail?id={{ content._id.toString() }}">查看详情</a>
             </div>
-            <div class="panel-footer color-gray">所属分类：{{ content.category_id.name.toString() }}</div>
+            <div class="panel-footer content-list-footer color-gray">
+                <span>所属分类：{{ content.category_id.name.toString() }}</span>
+                <span>{{content.views}} 人已读</span>
+            </div>
         </div>
     {% endfor %}
     {% else %}

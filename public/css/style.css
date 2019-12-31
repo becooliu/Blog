@@ -57,3 +57,15 @@
     line-height: 30px;
     cursor: pointer;
 }
+
+/* content */
+.content-list-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.content-tag {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
