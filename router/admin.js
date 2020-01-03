@@ -222,8 +222,8 @@ router.get('/content', (req, res) => {
         page = Math.max(1,page);
         page = Math.min(pages,page);
         const skip = (page - 1) * limit;
-        /***此处重点：通过schema 中的关联字段 category_id 在查询时，同时查询Category 表中的分类信息，使用populate("关联字段")方法***/
-        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate('category_id').then(cts => {
+        /***此处重点：通过schema 中的关联字段 category 在查询时，同时查询Category 表中的分类信息，使用populate("关联字段")方法***/
+        Content.find().sort({_id: -1}).limit(limit).skip(skip).populate(['category','user']).then(cts => {
             console.log(cts);
             res.render('admin/content_index' , {
                 userInfo: req.userInfo,
@@ -261,15 +261,15 @@ router.get('/content/add' , (req, res) => {
 router.post('/content/add' , (req, res) => {
     //console.log(req.body);
     let data = req.body;
-    let category_id = data.category;
-    let author = req.userInfo.username;
+    let category = data.category;
+    let user = req.userInfo._id.toString();
     let title = data.title;
     let desc = data.description;
     let content = data.content;
 
     let save_data = {
-        category_id,
-        author,
+        category,
+        user,
         title,
         desc,
         content
@@ -314,7 +314,7 @@ router.get('/content/edit', (req, res) => {
             return new Promise.reject();
         }
         
-        return Content.findOne({_id: id}).sort({_id: -1}).populate('category_id').then(content => {
+        return Content.findOne({_id: id}).sort({_id: -1}).populate('category').then(content => {
             if(!content) {
                 res.render('/admin/error' , {
                     userInfo: req.userInfo,
@@ -347,13 +347,13 @@ router.post('/content/edit' , (req, res) => {
             return new Promise.reject();
         }
         let updateCondition = {_id: id};
-        let category_id = resData.category;
+        let category = resData.category;
         let title = resData.title;
         let desc = resData.desc;
         let content = resData.content;
 
         let save_data = {
-            category_id,
+            category,
             title,
             desc,
             content

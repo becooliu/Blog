@@ -33,24 +33,20 @@
         <th>简介</th>
         <th>内容</th>
         <th>发布时间</th>
-        <th>修改时间</th>
         <th>操作</th>
     </tr>
     {% for content in contents %}
     <tr>
-        <td><span class="inline-span">{{ content.category_id.name.toString() }}</span></td>
+        <td><span class="inline-span">{{ content.category.name.toString() }}</span></td>
         <td><span class="inline-span" title="{{content._id.toString()}}">{{ content._id.toString() }}</span></td>
         <td><span class="inline-span" title="{{ content.title }}">{{ content.title }}</span></td>
-        <td><span class="inline-span" title="{{ content.author }}">{{ content.author }}</span></td>
+        <td><span class="inline-span" title="{{ content.author }}">{{ content.user.username }}</span></td>
         <td><span class="inline-span" title="{{ content.desc }}">{{ content.desc }}</span></td>
         <td><span class="inline-span" title="{{ content.content }}">{{ content.content }}</span></td>
-        <td><span class="inline-span" title="{{ content.createdAt|date('Y-m-d H:i:s') }}">{{ content.createdAt|date('Y-m-d H:i:s') }}</span></td>
-        <td><span class="inline-span" title="{{ content.updatedAt|date('Y-m-d H:i:s') }}">{{ content.updatedAt|date('Y-m-d H:i:s') }}</span></td>
+        <td><span class="inline-span" title="{{ content.createdAt|date('Y-m-d H:i:s') }}">{{ content.createdAt|date('Y-m-d H:i:s', -480) }}</span></td>
         <td>
             <a href="/admin/content/edit?id={{content._id.toString()}}">修改</a> |
             <a href="/admin/content/delete?id={{content._id.toString()}}">删除</a>
-            <!-- <a href="javascript:;" onclick="deleteContent('{{ content._id.toString() }}')">删除</a> -->
-            
         </td>
     </tr>
     {% endfor %}

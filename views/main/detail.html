@@ -7,7 +7,6 @@
     <div class="content-tag">
       <span>作者：{{ contents.author }}</span>
       <span>发布时间：{{ contents.createdAt|date('Y-m-d H:i:s' ,-480)|safe }}</span>
-      <span>修改时间：{{ contents.updatedAt|date('Y-m-d H:i:s', -480)|safe }}</span>
       <span>阅读量：{{ contents.views }}</span>
     </div>
   </div>
