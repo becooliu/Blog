@@ -18,7 +18,12 @@ module.exports = new mongoose.Schema({
     },
     title: String,
     desc: String,
-    content: String
+    content: String,
+    //评论
+    comments: {
+        type: Array,
+        default: []
+    }
 }, {
     timestamps: {
         createdAt: 'createdAt',
