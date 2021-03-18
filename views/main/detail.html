@@ -14,4 +14,44 @@
     <p>{{ contents.content }}</p>
 </article>
 
+
+<div class="comments-wrap" style="margin-top: 50px;">
+  {% if userInfo._id %}
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="panel-title">发表评论</div>
+    </div>
+
+    
+    <div class="panel-body">
+      <form method="POST" class="form-group">
+          <textarea name="comment" id="comment" cols="30" rows="3" class="form-control" style="margin-bottom: 15px;"></textarea>
+          <input type="hidden" name="" id="content_id" value="{{contents.id}}">
+          <input type="submit" class="btn btn-primary" value="发表评论" id="submit_comment">
+      </form>
+    </div>
+  </div>
+  {% else %}
+  <div class="alert alert-danger">登录后才可以发表评论。。。</div>
+  {% endif %}
+
+  <div id="comment_list_wrap">
+    <!-- <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="row">
+          <div class="col-sm-6">Admin</div>
+          <div class="col-sm-6 text-right">2021-02-06</div>
+        </div>
+        
+      </div>
+      <div class="panel-body">
+        Basic panel example
+      </div>
+    </div> -->
+
+  </div>
+  <script src="../../public/js/jquery-1.11.3.min.js"></script>
+<script src="../../public/js/comment.js"></script>
+</div>
+
 {% endblock %}
