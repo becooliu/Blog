@@ -4,6 +4,8 @@ const router = express.Router();
 
 //引用数据库操作模块,它是一个构造函数
 const User = require('../models/User');
+const Content = require('../models/Content');
+const { response } = require('express');
 
 const responseData = {} ;
 
@@ -106,6 +108,48 @@ router.get('/user/logout', function(req, res) {
     req.cookies.set('userInfo', null);
     responseData.code = 'null';
     res.json(responseData);
+})
+
+//发表评论
+router.post('/comments/post', function(req, res) {
+    // 评论的文章id
+    let contentId = req.body.contentid || '';
+    let postData = {
+        username: req.userInfo.username,
+        postTime: new Date(),
+        comments: req.body.content
+    }
+
+    //查询当前评论文章的id
+    Content.findOne({
+        _id: contentId
+    }).then(content => {
+        content.comments.push(postData)
+        return content.save();
+    }).then(newContent => {
+        responseData.message = '评论成功';
+        responseData.code = '200';
+        responseData.data = postData
+        res.json(responseData)
+    }).catch(err => {
+        throw new Error(err)
+    })
+})
+
+//获取评论
+router.get('/comments/get', function(req, res){
+    let contentId = req.query.contentid || "";
+    Content.findOne({
+        _id: contentId
+    }).then(blogContent => {
+        responseData.code = '200'
+        responseData.message = '获取评论成功。';
+        responseData.data = blogContent.comments;
+        res.json(responseData)
+        //return blogContent.comments
+    }).catch(err => {
+        throw new Error(err)
+    })
 })
 
 module.exports = router;
