@@ -32,7 +32,9 @@ router.get('/', (req, res) => {
             if(c_id) {
                 let ct = [];
                 for(let i = 0,length = content.length; i< length; i++) {
-                    if(content[i].category_id._id == c_id) {
+                    //console.log('[DEBUG_INFO]'+content[i])
+                    //console.log('Debug_info'+c_id)
+                    if(content[i].category == c_id) {
                         ct.push(content[i]);
                     }
                 }
@@ -99,6 +101,13 @@ router.get('/main/detail', (req, res) => {
             }
         })
     }
+})
+
+router.post('/main/detail' , (req , res) => {
+    console.log(req.query);
+    console.log(req.body);
+    let blog_id = req.query.id;
+    let comment = req.body.comment;
 })
 
 module.exports = router;
