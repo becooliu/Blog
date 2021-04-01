@@ -19,7 +19,8 @@ $(function(){
                 if (response.code && response.code == '200' && response.data) {
                     
                     let comments = response.data
-                    for (let i = 0, len = comments.length; i < len; i++) {
+                    let len = comments.length
+                    for (let i = len - 1; i >= 0; i--) {
                         commentStr += `<div class="panel panel-default">
                         <div class="panel-heading">
                             <div class="row">
